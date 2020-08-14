@@ -17,9 +17,7 @@ enum layers {
 };
 
 enum keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE
+  QWERTY = SAFE_RANGE
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -137,26 +135,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
-    case LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_LOWER);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
-    case RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      } else {
-        layer_off(_RAISE);
-        update_tri_layer(_LOWER, _RAISE, _ADJUST);
-      }
-      return false;
-      break;
   }
   return true;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case LT(_RAISE, KC_SPC):
+      return 200;
+    default:
+      return TAPPING_TERM;
+  }
 }
