@@ -17,7 +17,7 @@ enum layers {
 };
 
 enum keycodes {
-  QWERTY = SAFE_RANGE
+  LAYOUT = SAFE_RANGE
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -57,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_ADJUST] = LAYOUT_ortho_4x12(
   _______, RESET,   DEBUG,   _______, _______, _______, _______, _______, _______,_______, _______, KC_DEL ,
-  _______, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, _______, _______, QWERTY,  _______, _______,  _______,  _______,
+  _______, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, _______, _______, LAYOUT,  _______, _______,  _______,  _______,
   _______, _______,  _______,  _______,   _______,  _______,   _______,  _______, _______, _______, _______, _______,
   _______, _______, _______, _______, _______,     _______, _______,      _______, _______, _______, _______, _______
 )
@@ -67,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QWERTY:
+    case LAYOUT:
       if (record->event.pressed) {
         switch (eeconfig_read_default_layer()) {
           case 1UL << _QWERTY:
