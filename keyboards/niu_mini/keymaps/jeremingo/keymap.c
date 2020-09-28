@@ -4,7 +4,7 @@
 extern keymap_config_t keymap_config;
 
 #define RAISE_SPC LT(_RAISE, KC_SPC)
-#define LOWER_BSPC LT(_LOWER, KC_BSPC)
+#define RAISE_BSPC LT(_RAISE, KC_BSPC)
 
 enum tap_dances {
     TD_PLY_MUTE,
@@ -34,14 +34,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  DV_QUOT,    DV_COMM,    DV_DOT,    DV_P,    DV_Y,    DV_F,    DV_G,    DV_C,    DV_R,    DV_L,    KC_BSPC,
   LCTL_T(KC_CAPS),  DV_A,    DV_O,    DV_E,    DV_U,    DV_I,    DV_D,    DV_H,    DV_T,    DV_N,    DV_S, DV_MINS,
   KC_LSFT, DV_SCLN,    DV_Q,    DV_J,    DV_K,    DV_X,    DV_B,    DV_M,    DV_W, DV_V,  DV_Z, KC_ENT ,
-  KC_LGUI, KC_LCTL, RCTL_T(KC_ESC), KC_LALT, LSFT_T(KC_SPC), LOWER_BSPC,   MO(_RAISE), RAISE_SPC,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+  KC_LGUI, KC_LCTL, RCTL_T(KC_ESC), KC_LALT, LSFT_T(KC_SPC), MO(_LOWER), RAISE_BSPC,   RAISE_SPC,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 [_DVORAK] = LAYOUT_ortho_4x12(
   KC_TAB,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,    KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_BSPC,
   LCTL_T(KC_CAPS),  KC_A,    KC_O,    KC_E,    KC_U,    KC_I,    KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_SLSH,
   KC_LSFT, KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X,    KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_ENT ,
-  KC_LGUI, KC_LCTL, RCTL_T(KC_ESC), KC_LALT, LSFT_T(KC_SPC), LOWER_BSPC,   MO(_RAISE), RAISE_SPC,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+  KC_LGUI, KC_LCTL, RCTL_T(KC_ESC), KC_LALT, LSFT_T(KC_SPC), MO(_LOWER), RAISE_BSPC,   RAISE_SPC,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 [_LOWER] = LAYOUT_ortho_4x12(
@@ -95,7 +95,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case RAISE_SPC:
       return TAPPING_TERM - 100;
-    case LOWER_BSPC:
+    case RAISE_BSPC:
       return TAPPING_TERM - 100;
     default:
       return TAPPING_TERM;
