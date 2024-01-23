@@ -33,7 +33,7 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT(TD(UNO))
+  LAYOUT(TD(UNO))
 };
 
 const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = { 2, 2, 2, 2 };
