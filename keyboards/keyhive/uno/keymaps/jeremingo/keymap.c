@@ -25,7 +25,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           tap_code16(RCTL(DV_M));
         } else {
           tap_code16(LGUI(DV_R));
-          wait_ms(100);
+          wait_ms(200);
           
           tap_code(DV_A);
           tap_code(DV_R);
@@ -35,7 +35,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else if (is_arch_open) {
         is_arch_open = false;
       } else {
-        wait_ms(60);
+        wait_ms(170);
         tap_code(KC_ENTER);
         is_arch_open = true;
       }
