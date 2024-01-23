@@ -1,42 +1,60 @@
 #include QMK_KEYBOARD_H
 #include "../../../../../quantum/keymap_extras/keymap_dvorak.h"
 
+int cur_dance(tap_dance_state_t *state);
+void uno_finished(tap_dance_state_t *state, void *user_data);
+void uno_reset(tap_dance_state_t *state, void *user_data);
+
 void register_arch(void);
 void unregister_arch(void);
 
-enum uno_keycode
-{
-  ARCH = SAFE_RANGE
+enum {
+  SINGLE_TAP,
+  DOUBLE_HOLD
 };
 
-enum layers
-{
-  _ARCH
+enum {
+  UNO
+};
+
+tap_dance_action_t tap_dance_actions[] = {
+  [UNO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uno_finished, uno_reset)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_ARCH] = LAYOUT(ARCH)
+  [0] = LAYOUT(TD(UNO))
 };
 
-bool is_arch_open = false;
+int uno_tap_state = 0;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case ARCH:
-      if (record->event.pressed) {
-        register_arch();
-      } else {
-        unregister_arch();
-      }
-      break;
-      return false;
-  }
-  return true;
-}
+bool is_arch_open = false;
 
 void keyboard_post_init_user(void) {
   rgblight_enable_noeeprom();
   rgblight_sethsv_noeeprom(HSV_GREEN);
+}
+
+int cur_dance(tap_dance_state_t *state) {
+  return state->count == 2 && state->pressed ?  DOUBLE_HOLD :
+    SINGLE_TAP;
+}
+
+void uno_finished(tap_dance_state_t *state, void *user_data) {
+  uno_tap_state = cur_dance(state);
+
+  switch (uno_tap_state) {
+    case SINGLE_TAP: register_arch(); break;
+    case DOUBLE_HOLD: rgblight_sethsv_noeeprom(HSV_RED); break;
+  }
+}
+
+void uno_reset(tap_dance_state_t *state, void *user_data) {
+  switch (uno_tap_state) {
+    case SINGLE_TAP: unregister_arch(); break;
+    case DOUBLE_HOLD: rgblight_sethsv_noeeprom(HSV_GREEN); break;
+  }
+
+  uno_tap_state = 0;
 }
 
 void register_arch() {
@@ -61,3 +79,4 @@ void unregister_arch() {
   
   is_arch_open = !is_arch_open;
 }
+
