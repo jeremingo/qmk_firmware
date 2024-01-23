@@ -25,6 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT(TD(UNO))
 };
 
+const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = {5,5,5,5};
 int uno_tap_state = 0;
 
 bool is_arch_open = false;
@@ -44,14 +45,14 @@ void uno_finished(tap_dance_state_t *state, void *user_data) {
 
   switch (uno_tap_state) {
     case SINGLE_TAP: register_arch(); break;
-    case DOUBLE_HOLD: rgblight_sethsv_noeeprom(HSV_RED); break;
+    case DOUBLE_HOLD: rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING); break;
   }
 }
 
 void uno_reset(tap_dance_state_t *state, void *user_data) {
   switch (uno_tap_state) {
     case SINGLE_TAP: unregister_arch(); break;
-    case DOUBLE_HOLD: rgblight_sethsv_noeeprom(HSV_GREEN); break;
+    case DOUBLE_HOLD: rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); break;
   }
 
   uno_tap_state = 0;
