@@ -1,6 +1,8 @@
 #include QMK_KEYBOARD_H
 #include "../../../../../quantum/keymap_extras/keymap_dvorak.h"
 
+void matrix_scan_user(void);
+
 int cur_dance(tap_dance_state_t *state);
 void uno_finished(tap_dance_state_t *state, void *user_data);
 void uno_reset(tap_dance_state_t *state, void *user_data);
@@ -20,6 +22,12 @@ enum {
   UNO
 };
 
+#define MODE_COUNT 2
+
+const uint8_t COLORS[MODE_COUNT][3] = { { HSV_GREEN }, { HSV_RED } };
+
+int mode = 0;
+
 tap_dance_action_t tap_dance_actions[] = {
   [UNO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uno_finished, uno_reset)
 };
@@ -28,9 +36,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT(TD(UNO))
 };
 
-const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = { 5, 5, 5, 5 };
+const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = { 2, 2, 2, 2 };
 
 int uno_tap_state = 0;
+
+uint16_t config_timer = 0xFFFF;
 
 bool is_arch_open = false;
 
@@ -63,11 +73,22 @@ void uno_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 void register_config() {
+  config_timer = timer_read();
   rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
 }
 
 void unregister_config() {
+  config_timer = 0xFFFF;
   rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+}
+
+void matrix_scan_user() {
+  if (config_timer != 0xFFFF) {
+    if ((timer_elapsed(config_timer) / 1500) % MODE_COUNT != mode) {
+      mode = (mode + 1) % MODE_COUNT;
+      rgblight_sethsv_noeeprom(COLORS[mode][0], COLORS[mode][1], COLORS[mode][2]);
+    }
+  }
 }
 
 void register_arch() {
