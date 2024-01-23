@@ -54,11 +54,10 @@ void register_arch() {
 }
 
 void unregister_arch() {
-  if (is_arch_open) {
-    is_arch_open = false;
-  } else {
+  if (!is_arch_open) {
     wait_ms(170);
     tap_code(KC_ENTER);
-    is_arch_open = true;
   }
+  
+  is_arch_open = !is_arch_open;
 }
