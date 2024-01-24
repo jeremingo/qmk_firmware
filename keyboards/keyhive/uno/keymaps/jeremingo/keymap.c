@@ -13,6 +13,9 @@ void unregister_config(void);
 void register_arch(void);
 void unregister_arch(void);
 
+void register_enter(void);
+void unregister_enter(void);
+
 enum {
   SINGLE_TAP,
   DOUBLE_HOLD
@@ -22,11 +25,36 @@ enum {
   UNO
 };
 
+enum {
+  ARCH,
+  ENTER
+};
+
 #define MODE_COUNT 2
 
-const uint8_t COLORS[MODE_COUNT][3] = { { HSV_GREEN }, { HSV_RED } };
+typedef struct {
+  uint8_t index;
+  uint8_t color[3];
+  void (*register_key)(void);
+  void (*unregister_key)(void);
+} mode;
 
-int mode = 0;
+const mode MODES[MODE_COUNT] = { 
+  {
+    .index = ARCH,
+    .color = { HSV_GREEN },
+    .register_key = register_arch,
+    .unregister_key = unregister_arch
+  },
+  {
+    .index = ENTER,
+    .color = { HSV_RED },
+    .register_key = register_enter,
+    .unregister_key = unregister_enter
+  }
+};
+
+mode cur_mode = MODES[0];
 
 tap_dance_action_t tap_dance_actions[] = {
   [UNO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uno_finished, uno_reset)
@@ -46,7 +74,7 @@ bool is_arch_open = false;
 
 void keyboard_post_init_user(void) {
   rgblight_enable_noeeprom();
-  rgblight_sethsv_noeeprom(HSV_GREEN);
+  rgblight_sethsv_noeeprom(cur_mode.color[0], cur_mode.color[1], cur_mode.color[2]);
 }
 
 int cur_dance(tap_dance_state_t *state) {
@@ -58,14 +86,14 @@ void uno_finished(tap_dance_state_t *state, void *user_data) {
   uno_tap_state = cur_dance(state);
 
   switch (uno_tap_state) {
-    case SINGLE_TAP: register_arch(); break;
+    case SINGLE_TAP: cur_mode.register_key(); break;
     case DOUBLE_HOLD: register_config(); break;
   }
 }
 
 void uno_reset(tap_dance_state_t *state, void *user_data) {
   switch (uno_tap_state) {
-    case SINGLE_TAP: unregister_arch(); break;
+    case SINGLE_TAP: cur_mode.unregister_key(); break;
     case DOUBLE_HOLD: unregister_config(); break;
   }
 
@@ -84,9 +112,9 @@ void unregister_config() {
 
 void matrix_scan_user() {
   if (config_timer != 0xFFFF) {
-    if ((timer_elapsed(config_timer) / 1500) % MODE_COUNT != mode) {
-      mode = (mode + 1) % MODE_COUNT;
-      rgblight_sethsv_noeeprom(COLORS[mode][0], COLORS[mode][1], COLORS[mode][2]);
+    if ((timer_elapsed(config_timer) / 1500) % MODE_COUNT != cur_mode.index) {
+      cur_mode = MODES[(cur_mode.index + 1) % MODE_COUNT];
+      rgblight_sethsv_noeeprom(cur_mode.color[0], cur_mode.color[1], cur_mode.color[2]);
     }
   }
 }
@@ -112,5 +140,13 @@ void unregister_arch() {
   }
   
   is_arch_open = !is_arch_open;
+}
+
+void register_enter() {
+  register_code(KC_ENTER);
+}
+
+void unregister_enter() {
+  unregister_code(KC_ENTER);
 }
 
