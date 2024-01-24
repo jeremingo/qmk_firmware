@@ -54,7 +54,16 @@ const mode MODES[MODE_COUNT] = {
   }
 };
 
-mode cur_mode = MODES[0];
+typedef union {
+  uint32_t raw;
+  struct {
+    uint8_t mode_index;
+  };
+} user_config_t;
+
+user_config_t user_config;
+
+mode cur_mode;
 
 tap_dance_action_t tap_dance_actions[] = {
   [UNO] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, uno_finished, uno_reset)
@@ -73,6 +82,8 @@ uint16_t config_timer = 0xFFFF;
 bool is_arch_open = false;
 
 void keyboard_post_init_user(void) {
+  user_config.raw = eeconfig_read_user();
+  cur_mode = MODES[user_config.mode_index];
   rgblight_enable_noeeprom();
   rgblight_sethsv_noeeprom(cur_mode.color[0], cur_mode.color[1], cur_mode.color[2]);
 }
@@ -108,6 +119,11 @@ void register_config() {
 void unregister_config() {
   config_timer = 0xFFFF;
   rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+
+  if (user_config.mode_index != cur_mode.index) {
+    user_config.mode_index = cur_mode.index;
+    eeconfig_update_user(user_config.raw);
+  }
 }
 
 void matrix_scan_user() {
