@@ -3,7 +3,7 @@
 
 void matrix_scan_user(void);
 
-int cur_dance(tap_dance_state_t *state);
+uint8_t cur_dance(tap_dance_state_t *state);
 void uno_finished(tap_dance_state_t *state, void *user_data);
 void uno_reset(tap_dance_state_t *state, void *user_data);
 
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint8_t RGBLED_BREATHING_INTERVALS[] PROGMEM = { 2, 2, 2, 2 };
 
-int uno_tap_state = 0;
+uint8_t uno_tap_state = 0;
 
 uint16_t config_timer = 0xFFFF;
 
@@ -77,7 +77,7 @@ void keyboard_post_init_user(void) {
   rgblight_sethsv_noeeprom(cur_mode.color[0], cur_mode.color[1], cur_mode.color[2]);
 }
 
-int cur_dance(tap_dance_state_t *state) {
+uint8_t cur_dance(tap_dance_state_t *state) {
   return state->count == 2 && state->pressed ?  DOUBLE_HOLD :
     SINGLE_TAP;
 }
