@@ -128,8 +128,11 @@ void unregister_config() {
 
 void matrix_scan_user() {
   if (config_timer != 0xFFFF) {
-    if ((timer_elapsed(config_timer) / 1500) % MODE_COUNT != cur_mode.index) {
-      cur_mode = MODES[(cur_mode.index + 1) % MODE_COUNT];
+    uint8_t wanted_index = (user_config.mode_index + (timer_elapsed(config_timer) / 1500) + 1)
+      % MODE_COUNT;
+
+    if (cur_mode.index != wanted_index) {
+      cur_mode = MODES[wanted_index];
       rgblight_sethsv_noeeprom(cur_mode.color[0], cur_mode.color[1], cur_mode.color[2]);
     }
   }
