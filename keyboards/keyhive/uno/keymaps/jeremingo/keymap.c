@@ -16,6 +16,9 @@ void unregister_arch(void);
 void register_enter(void);
 void unregister_enter(void);
 
+void register_rickroll(void);
+void unregister_rickroll(void);
+
 enum {
   SINGLE_TAP,
   DOUBLE_HOLD
@@ -27,10 +30,11 @@ enum {
 
 enum {
   ARCH,
-  ENTER
+  ENTER,
+  RICKROLL
 };
 
-#define MODE_COUNT 2
+#define MODE_COUNT 3
 
 typedef struct {
   uint8_t index;
@@ -51,6 +55,12 @@ const mode MODES[MODE_COUNT] = {
     .color = { HSV_RED },
     .register_key = register_enter,
     .unregister_key = unregister_enter
+  },
+  {
+    .index = RICKROLL,
+    .color = { HSV_ORANGE },
+    .register_key = register_rickroll,
+    .unregister_key = unregister_rickroll
   }
 };
 
@@ -167,5 +177,18 @@ void register_enter() {
 
 void unregister_enter() {
   unregister_code(KC_ENTER);
+}
+
+
+void register_rickroll() {
+    tap_code16(LGUI(KC_R));
+    wait_ms(200);
+    
+    SEND_STRING("https://shattereddisk.github.io/rickroll/rickroll.mp4");
+}
+
+void unregister_rickroll() {
+  wait_ms(170);
+  tap_code(KC_ENTER);
 }
 
