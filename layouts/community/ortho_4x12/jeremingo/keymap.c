@@ -11,6 +11,10 @@ enum tap_dances {
     TD_NXT_PRV
 };
 
+enum combos {
+    ENTLOW_CW
+};
+
 enum layers {
   _QWERTY,
   _DVORAK,
@@ -26,6 +30,12 @@ enum keycodes {
 tap_dance_action_t tap_dance_actions[] = {
   [TD_PLY_MUTE]  = ACTION_TAP_DANCE_DOUBLE(KC_MPLY, KC_MUTE),
   [TD_NXT_PRV]  = ACTION_TAP_DANCE_DOUBLE(KC_MNXT, KC_MPRV)
+};
+
+const uint16_t PROGMEM entlow_combo[] = { LSFT_ENT, MO(_LOWER), COMBO_END };
+
+combo_t key_combos[] = {
+  [ENTLOW_CW]  = COMBO(entlow_combo, CW_TOGG)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -100,3 +110,51 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
       return TAPPING_TERM;
   }
 }
+
+bool caps_word_press_user(uint16_t keycode) {
+  switch (keycode) {
+    case DV_A:
+    case DV_B:
+    case DV_C:
+    case DV_D:
+    case DV_E:
+    case DV_F:
+    case DV_G:
+    case DV_H:
+    case DV_I:
+    case DV_J:
+    case DV_K:
+    case DV_L:
+    case DV_M:
+    case DV_N:
+    case DV_O:
+    case DV_P:
+    case DV_Q:
+    case DV_R:
+    case DV_S:
+    case DV_T:
+    case DV_U:
+    case DV_V:
+    case DV_W:
+    case DV_X:
+    case DV_Y:
+    case DV_Z:
+    case DV_MINS:
+      add_weak_mods(MOD_BIT(KC_LSFT));
+      return true;
+
+    case KC_1 ... KC_0:
+    case KC_BSPC:
+    case KC_DEL:
+    case DV_UNDS:
+    case KC_LEFT:
+    case KC_DOWN:
+    case KC_UP:
+    case KC_RGHT:
+      return true;
+
+    default:
+      return false;
+  }
+}
+
