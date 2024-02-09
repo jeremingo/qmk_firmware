@@ -21,11 +21,14 @@ enum layers {
   _DVORAK,
   _LOWER,
   _RAISE,
-  _ADJUST
+  _ADJUST,
+  _PLOVER
 };
 
 enum keycodes {
-  LAYOUT = SAFE_RANGE
+  LAYOUT = SAFE_RANGE,
+  PLOVER,
+  EXT_PLV
 };
 
 tap_dance_action_t tap_dance_actions[] = {
@@ -71,11 +74,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_ADJUST] = LAYOUT_ortho_4x12(
   LALT(LCTL(KC_DEL)), QK_RBT,  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,
-  LSFT(LCTL(KC_ESC)), RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, _______, _______, LAYOUT,  _______, _______, _______, _______,
+  LSFT(LCTL(KC_ESC)), RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, _______, PLOVER,  LAYOUT,  _______, _______, _______, _______,
   _______,            _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
   _______,            _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-)
+),
 
+[_PLOVER] = LAYOUT_ortho_4x12(
+    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
+    XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
+    XXXXXXX, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    EXT_PLV, XXXXXXX, XXXXXXX, KC_C,    KC_V,    XXXXXXX, XXXXXXX, KC_N,    KC_M,    XXXXXXX, XXXXXXX, XXXXXXX
+)
 
 };
 
@@ -94,6 +103,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
+    case PLOVER:
+      if (record->event.pressed) {
+        layer_on(_PLOVER);
+        layer_off(_DVORAK);
+        layer_off(_QWERTY);
+        layer_off(_RAISE);
+        layer_off(_LOWER);
+        layer_off(_ADJUST);
+      }
+      return false;
+      break;
+    case EXT_PLV:
+      if (record->event.pressed) {
+        layer_off(_PLOVER);
+      }
+      return false;
+      break;
+
   }
   return true;
 }
