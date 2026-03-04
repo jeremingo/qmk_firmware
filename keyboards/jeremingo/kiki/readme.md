@@ -1,6 +1,6 @@
 # KiKi
 
-![KiKi](raw.githubusercontent.com/jeremingo/KiKi/refs/heads/master/images/top.png)
+![KiKi](https://raw.githubusercontent.com/jeremingo/KiKi/refs/heads/master/images/top.png)
 
 An ARTSEY based handwired keyboard
 
