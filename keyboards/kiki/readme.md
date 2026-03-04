@@ -1,12 +1,12 @@
-# kiki
+# KiKi
 
-![kiki](imgur.com image replace me!)
+![KiKi](raw.githubusercontent.com/jeremingo/KiKi/refs/heads/master/images/top.png)
 
-*A short description of the keyboard/project*
+An ARTSEY based handwired keyboard
 
-* Keyboard Maintainer: [Tair Shatit](https://github.com/jeremingo)
-* Hardware Supported: *The PCBs, controllers supported*
-* Hardware Availability: *Links to where you can find this hardware*
+* Keyboard Maintainer: [jeremingo](https://github.com/jeremingo)
+* Hardware Supported: Arduino Pro Micro
+* Hardware Availability: [Aliexpress](https://aliexpress.com/wholesale?SearchText=arduino+pro+micro)
 
 Make example for this keyboard (after setting up your build environment):
 
